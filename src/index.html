@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+   <script type="text/javascript">
+    function clearText(field){
+      if (field.defaultValue == field.value) field.value = '';
+      else if (field.value == '') field.value = field.defaultValue;
+    }
+   </script>
+    {% if runner %}
+      <h4>{{ avatar }} <b>{{ runner }}'s</b> training log</h4>
+    {% else %}
+      <h3>Welcome to the online training log!</h3>
+    {% endif %}
+    <h4><a href="{{ url }}">{{ url_linktext }}</a></h4>
+    <br>
+    {% if runner %}
+    <br>
+    <h4>Your Runs:</h4>
+    <br><br>
+    <table id="runs"><tr>
+      <th>Date</th>
+      <th>Title</th>
+      <th>Distance (mi)</th>
+      <th>Time (min)</th>
+    </tr>
+    {% for run in runs %}
+    <tr>
+      <td>{{ run.date|date:"d M Y f a" }}</td>
+      <td>{{ run.name|escape }}</td>
+      <td>{{ run.distance|escape }}</td>
+      <td>{{ run.duration|escape }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    <br>
+    <h4>Add another run:</h4>
+    <br><br>
+    <form action="/addRun" method="post">
+      <input type="text" name="name" size="25" value="Run Title" onFocus="clearText(this)" onBlur="clearText(this)">
+      <input type="text" name="distance" size="25" value="Distance" onFocus="clearText(this)" onBlur="clearText(this)">
+      <input type="text" name="duration" size="25" value="Duration" onFocus="clearText(this)" onBlur="clearText(this)">
+      <div><input type="submit" value="Add Run"></div>
+    </form>
+   {% endif %} 
+  </body>
+</html>
