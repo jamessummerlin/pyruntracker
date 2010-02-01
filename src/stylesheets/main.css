@@ -20,6 +20,11 @@ img {
   vertical-align: middle;
 }
 
+img.appimg {
+  margin-top:5%;
+  margin-left:65%;
+}
+
 #runs
 {
   font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
@@ -33,6 +38,9 @@ img {
   border:1px solid #0C676B;
   padding:3px 7px 2px 7px;
   width:70px;
+}
+#runs td.delcell { 
+	border-style: none;
 }
 #runs th 
 {

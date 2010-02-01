@@ -32,6 +32,7 @@
       <td>{{ run.name|escape }}</td>
       <td>{{ run.distance|escape }}</td>
       <td>{{ run.duration|escape }}</td>
+      <td class="delcell"><a href="/removeRun?key={{run.key}}"><img src="/images/trash.gif" alt="Remove Run"/></a></td>
     </tr>
     {% endfor %}
     </table>
@@ -44,6 +45,7 @@
       <input type="text" name="duration" size="25" value="Duration" onFocus="clearText(this)" onBlur="clearText(this)">
       <div><input type="submit" value="Add Run"></div>
     </form>
-   {% endif %} 
+   {% endif %}
+   <img class="appimg" src="/images/appengine.gif" alt="Powered by Google App Engine"/>
   </body>
 </html>

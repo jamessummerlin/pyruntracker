@@ -61,13 +61,17 @@ def PutRunner():
     runner = Runner()
     runner.user = users.get_current_user()
     runner.put()
+    
+def ClearRunCache():
+    '''Clears the current runners memcache'''
+    memcache.delete(GetMemcacheKey())
             
 def GetRuns():
     '''Returns the Runs associated with the currently active Runner.  Looks in memcache first then the datastore'''
     runs = deserialize_entities(memcache.get(GetMemcacheKey()))
     if runs is None:
         runs = Run.all().ancestor(GetRunner())
-        if not memcache.set(GetMemcacheKey(), runs):
+        if not memcache.set(GetMemcacheKey(), serialize_entities(runs)):
             logging.error("Memcache set failed.")
     return runs
 
@@ -120,7 +124,19 @@ class MainPage(webapp.RequestHandler):
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
+        
+class RemoveRunAction(webapp.RequestHandler):
+    '''The handler used to remove a Run from the system'''
+    def get(self):
+         
+        # Remove the run when we have a runner parent
+        key = self.request.get('key')
+        run = Run.get(key)
+        run.delete()
+        ClearRunCache()
 
+        self.redirect('/')
+        
 class AddRunAction(webapp.RequestHandler):
     '''The handler used to add a Run to the system.  Also adds the Runner if the Runner is not in the system yet'''
     def post(self):
@@ -140,6 +156,7 @@ class AddRunAction(webapp.RequestHandler):
         self.redirect('/')
 
 application = webapp.WSGIApplication([('/', MainPage),
+                                      ('/removeRun', RemoveRunAction),
                                       ('/addRun', AddRunAction)],
                                      debug=True)
 
